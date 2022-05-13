@@ -1,10 +1,11 @@
 package edu.ronaldmirabal.diplomado.week2;
 
-import edu.ronaldmirabal.diplomado.model.Holiday;
+import edu.ronaldmirabal.diplomado.model.week2.Holiday;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Crear una mejora de cualquiera de los algoritmos optimizados para pasarle los días laborales (no asumir, que llegue como parámetro)
@@ -24,6 +25,44 @@ public class HomeWork {
      * @implNote El último día de vacación también cuenta, es decir, que regresa el siguiente dia laboral
      */
     public LocalDate calculateDueDate(List<DayOfWeek> laborDays, List<Holiday> holidays, LocalDate startDate, int vacation) {
-        return null;
+        LocalDate result = startDate;
+        int countLaborDay = 0;
+        while (true){
+            if (countLaborDay <= vacation){
+                if (isHoliday(holidays,result)){
+                    result = result.plusDays(1);
+                }else{
+                    if (isLaborDay(laborDays, result)){
+                        result = result.plusDays(1);
+                        countLaborDay++;
+                    }else{
+                        result = result.plusDays(1);
+                    }
+                }
+            }else{
+                break;
+            }
+        }
+        return result.minusDays(1);
     }
+
+
+
+    private  boolean isLaborDay(List<DayOfWeek> labordays, LocalDate date){
+        boolean result = false;
+        int i = 0;
+        while (i < labordays.size()){
+            if (Objects.equals(labordays.get(i).toString(), date.getDayOfWeek().toString())){
+                result = true;
+                break;
+            }
+            i++;
+        }
+        return result;
+    }
+
+    private boolean isHoliday(List<Holiday> holidays, LocalDate date) {
+        return holidays.stream().anyMatch(holiday -> holiday.getDate().isEqual(date));
+    }
+
 }
