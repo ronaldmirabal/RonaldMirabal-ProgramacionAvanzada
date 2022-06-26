@@ -3,6 +3,7 @@ package edu.ronaldmirabal.diplomado.week6;
 import com.github.javafaker.Faker;
 import edu.ronaldmirabal.diplomado.model.week3.FrequencyType;
 import edu.ronaldmirabal.diplomado.model.week3.LoanType;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -10,10 +11,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class HomeWorkTest {
     private final HomeWork homeWork = new HomeWork();
@@ -51,6 +54,18 @@ class HomeWorkTest {
     }
 
 
+    @ParameterizedTest
+    @MethodSource("edu.ronaldmirabal.diplomado.week6.HomeWorkTest#provideRandomBigDecimals")
+    void interesFormtest(BigDecimal interes){
+        BigDecimal defaultValue = new BigDecimal("8.5");
+        assertEquals(defaultValue, homeWork.formValidation(NO_REQUIRED_FIELD,COPY_FROM_DEFAULT, interes, defaultValue, BigDecimal.ZERO));
+        assertNull(homeWork.formValidation(NO_REQUIRED_FIELD,COPY_FROM_DEFAULT,interes,null,BigDecimal.ZERO));
+    }
+
+    @Test
+    void startDateFormTest(){
+        assertNull(homeWork.formValidation(REQUIRED_FIELD,COPY_FROM_DEFAULT,null, LocalDate.now(),null));
+    }
 
 
     static Stream<Arguments> provideRandomNames(){
